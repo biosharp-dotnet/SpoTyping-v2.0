@@ -94,4 +94,4 @@ A pdf file with the information in the xls file summarized with pie charts.
 Rscript SpoTyping_plot.r query_from_SITVIT.xls output.pdf
 
 **An example call:**  
-Rscript SpoTypint_plot.r SITVIT_ONLINE.777777477760771.xls SITVIT_ONLINE.777777477760771.pdf
+Rscript SpoTyping_plot.r SITVIT_ONLINE.777777477760771.xls SITVIT_ONLINE.777777477760771.pdf
