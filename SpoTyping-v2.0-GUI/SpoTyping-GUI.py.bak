@@ -19,20 +19,20 @@
 ## Please report bugs to:
 ## xiaeryu@u.nus.edu
 
-import tkinter
-import tkinter.filedialog
+import Tkinter
+import tkFileDialog
 import os
 import re
 import subprocess
-import urllib.request, urllib.parse, urllib.error
-import urllib.request, urllib.error, urllib.parse
+import urllib
+import urllib2
 import gzip
 import time
 
 
-class Main(tkinter.Tk):
+class Main(Tkinter.Tk):
     def __init__(self, parent):
-        tkinter.Tk.__init__(self, parent)
+        Tkinter.Tk.__init__(self, parent)
         self.parent = parent
         self.initialize()
 
@@ -62,143 +62,143 @@ class Main(tkinter.Tk):
         self.resizable(False, True)
 
         # Label of input
-        Lb0 = tkinter.Label(self, text="\n", anchor="center")
+        Lb0 = Tkinter.Label(self, text="\n", anchor="center")
         Lb0.grid(column=1, row=0, sticky='WE')
-        Lb1 = tkinter.Label(self, text="Input", anchor="center", font=("Helvetica", "14"))
+        Lb1 = Tkinter.Label(self, text="Input", anchor="center", font=("Helvetica", "14"))
         Lb1.grid(column=1, row=1, sticky='WE')
 
         # Select input type
-        L0 = tkinter.Label(self, text="Input type", anchor="w")
+        L0 = Tkinter.Label(self, text="Input type", anchor="w")
         L0.grid(column=0, row=2, sticky='W')
 
-        self.type = tkinter.BooleanVar()
-        RG1 = tkinter.Frame(self, width=80)
-        RG11 = tkinter.Radiobutton(RG1, text="Sequencing reads(fastq)", width=40, variable=self.type, value=False,
+        self.type = Tkinter.BooleanVar()
+        RG1 = Tkinter.Frame(self, width=80)
+        RG11 = Tkinter.Radiobutton(RG1, text="Sequencing reads(fastq)", width=40, variable=self.type, value=False,
                                    command=self.selectType)
         RG11.grid(column=0, row=0, sticky="W")
 
-        RG12 = tkinter.Radiobutton(RG1, text="Genomic sequence(fasta)", width=40, variable=self.type, value=True,
+        RG12 = Tkinter.Radiobutton(RG1, text="Genomic sequence(fasta)", width=40, variable=self.type, value=True,
                                    command=self.selectType)
         RG12.grid(column=1, row=0, sticky="W")
         RG11.select()
         RG1.grid(column=1, row=2, sticky='WE')
 
         # Input fastq 1
-        self.var1 = tkinter.StringVar()
-        L1 = tkinter.Label(self, text="Input Fastq 1/Fasta", anchor="w")
+        self.var1 = Tkinter.StringVar()
+        L1 = Tkinter.Label(self, text="Input Fastq 1/Fasta", anchor="w")
         L1.grid(column=0, row=3, sticky='W')
 
-        B1 = tkinter.Button(self, text="Browse", command=self.loadFile1)
+        B1 = Tkinter.Button(self, text="Browse", command=self.loadFile1)
         B1.grid(column=2, row=3, sticky="E")
 
-        self.E1 = tkinter.Entry(self, width=80, textvariable=self.var1)
+        self.E1 = Tkinter.Entry(self, width=80, textvariable=self.var1)
         self.E1.grid(column=1, row=3, sticky="WE")
 
-        B1C = tkinter.Button(self, text="Cancel", command=self.cancel1)
+        B1C = Tkinter.Button(self, text="Cancel", command=self.cancel1)
         B1C.grid(column=3, row=3, sticky="E")
 
         # Input fastq 2
-        self.var2 = tkinter.StringVar()
-        L2 = tkinter.Label(self, text="Input Fastq 2 (Optional)", anchor="w")
+        self.var2 = Tkinter.StringVar()
+        L2 = Tkinter.Label(self, text="Input Fastq 2 (Optional)", anchor="w")
         L2.grid(column=0, row=4, sticky='W')
 
-        B2 = tkinter.Button(self, text="Browse", command=self.loadFile2)
+        B2 = Tkinter.Button(self, text="Browse", command=self.loadFile2)
         B2.grid(column=2, row=4, sticky="E")
 
-        self.E2 = tkinter.Entry(self, width=80, textvariable=self.var2)
+        self.E2 = Tkinter.Entry(self, width=80, textvariable=self.var2)
         self.E2.grid(column=1, row=4, sticky="WE")
 
-        B2C = tkinter.Button(self, text="Cancel", command=self.cancel2)
+        B2C = Tkinter.Button(self, text="Cancel", command=self.cancel2)
         B2C.grid(column=3, row=4, sticky="E")
 
         # Input blast directory
-        self.var3 = tkinter.StringVar()
-        L3 = tkinter.Label(self, text="Blast executables directory", anchor="w")
+        self.var3 = Tkinter.StringVar()
+        L3 = Tkinter.Label(self, text="Blast executables directory", anchor="w")
         L3.grid(column=0, row=5, sticky='W')
 
-        B3 = tkinter.Button(self, text="Browse", command=self.loadDir)
+        B3 = Tkinter.Button(self, text="Browse", command=self.loadDir)
         B3.grid(column=2, row=5, sticky="E")
 
-        self.E3 = tkinter.Entry(self, width=80, textvariable=self.var3)
+        self.E3 = Tkinter.Entry(self, width=80, textvariable=self.var3)
         self.E3.grid(column=1, row=5, sticky="WE")
 
-        B3C = tkinter.Button(self, text="Cancel", command=self.cancel3)
+        B3C = Tkinter.Button(self, text="Cancel", command=self.cancel3)
         B3C.grid(column=3, row=5, sticky="E")
 
         # Input output file
-        self.var4 = tkinter.StringVar()
-        L4 = tkinter.Label(self, text="Output file", anchor="w")
+        self.var4 = Tkinter.StringVar()
+        L4 = Tkinter.Label(self, text="Output file", anchor="w")
         L4.grid(column=0, row=6, sticky='W')
 
-        B4 = tkinter.Button(self, text="Browse", command=self.loadFile3)
+        B4 = Tkinter.Button(self, text="Browse", command=self.loadFile3)
         B4.grid(column=2, row=6, sticky="E")
 
-        self.E4 = tkinter.Entry(self, width=80, textvariable=self.var4)
+        self.E4 = Tkinter.Entry(self, width=80, textvariable=self.var4)
         self.E4.grid(column=1, row=6, sticky="WE")
 
-        B4C = tkinter.Button(self, text="Cancel", command=self.cancel4)
+        B4C = Tkinter.Button(self, text="Cancel", command=self.cancel4)
         B4C.grid(column=3, row=6, sticky="E")
 
         # Label of parameter
-        Lb2 = tkinter.Label(self, text="", anchor="center")
+        Lb2 = Tkinter.Label(self, text="", anchor="center")
         Lb2.grid(column=0, row=7, columnspan=3, sticky='WE')
-        Lb3 = tkinter.Label(self, text="Parameters", anchor="center", font=("Helvetica", "14"))
+        Lb3 = Tkinter.Label(self, text="Parameters", anchor="center", font=("Helvetica", "14"))
         Lb3.grid(column=1, row=8, sticky='WE')
 
         # Swift mode
-        L5 = tkinter.Label(self, text="Swift mode", anchor="w")
+        L5 = Tkinter.Label(self, text="Swift mode", anchor="w")
         L5.grid(column=0, row=9, sticky='W')
 
-        self.var5 = tkinter.BooleanVar()
-        RG2 = tkinter.Frame(self, width=80)
-        RG21 = tkinter.Radiobutton(RG2, text="Yes", width=40, variable=self.var5, value=True, command=self.selection)
+        self.var5 = Tkinter.BooleanVar()
+        RG2 = Tkinter.Frame(self, width=80)
+        RG21 = Tkinter.Radiobutton(RG2, text="Yes", width=40, variable=self.var5, value=True, command=self.selection)
         RG21.grid(column=0, row=0, sticky="W")
 
-        RG22 = tkinter.Radiobutton(RG2, text="No", width=40, variable=self.var5, value=False, command=self.selection)
+        RG22 = Tkinter.Radiobutton(RG2, text="No", width=40, variable=self.var5, value=False, command=self.selection)
         RG22.grid(column=1, row=0, sticky="W")
         RG21.select()
         RG2.grid(column=1, row=9, sticky='WE')
 
         # Threshold selection
-        L6 = tkinter.Label(self, text="Error-free hit threshold", anchor="w")
+        L6 = Tkinter.Label(self, text="Error-free hit threshold", anchor="w")
         L6.grid(column=0, row=10, sticky='W')
 
-        self.entry6 = tkinter.Entry(self, width=80)
+        self.entry6 = Tkinter.Entry(self, width=80)
         self.entry6.grid(column=1, row=10, sticky="WE")
         self.entry6.insert(0, 5)
 
-        L7 = tkinter.Label(self, text="1-error tolerant hit threshold", anchor="w")
+        L7 = Tkinter.Label(self, text="1-error tolerant hit threshold", anchor="w")
         L7.grid(column=0, row=11, sticky='W')
 
-        self.entry7 = tkinter.Entry(self, width=80)
+        self.entry7 = Tkinter.Entry(self, width=80)
         self.entry7.grid(column=1, row=11, sticky="WE")
         self.entry7.insert(0, 6)
 
         # Add blank line
-        L8 = tkinter.Label(self, text="", anchor="center")
+        L8 = Tkinter.Label(self, text="", anchor="center")
         L8.grid(column=0, row=12, columnspan=3, sticky='WE')
-        L9 = tkinter.Label(self, text="", anchor="center")
+        L9 = Tkinter.Label(self, text="", anchor="center")
         L9.grid(column=0, row=13, columnspan=3, sticky='WE')
 
         # Submit, Reset, or Quit: Button settings
-        BG1 = tkinter.Frame(self)
-        B1 = tkinter.Button(BG1, width=25, text="Submit", command=self.SpoTyping)
+        BG1 = Tkinter.Frame(self)
+        B1 = Tkinter.Button(BG1, width=25, text="Submit", command=self.SpoTyping)
         #        B1 = Tkinter.Button(BG1, width=25, text="Submit", command=self.fakeRun)
-        B2 = tkinter.Button(BG1, width=25, text="Reset", command=self.clear)
-        B3 = tkinter.Button(BG1, width=25, text="Quit", command=self.quit)
+        B2 = Tkinter.Button(BG1, width=25, text="Reset", command=self.clear)
+        B3 = Tkinter.Button(BG1, width=25, text="Quit", command=self.quit)
         B1.grid(column=0, row=0, sticky="W")
         B2.grid(column=1, row=0, sticky="W")
         B3.grid(column=2, row=0, sticky="W")
         BG1.grid(column=1, row=14, sticky='WE')
 
         # Running process
-        L10 = tkinter.Label(self, text="", anchor="center")
+        L10 = Tkinter.Label(self, text="", anchor="center")
         L10.grid(column=0, row=15, columnspan=3, sticky='WE')
 
-        TG1 = tkinter.Frame(self, width=120)
-        self.scrollbar = tkinter.Scrollbar(TG1)
+        TG1 = Tkinter.Frame(self, width=120)
+        self.scrollbar = Tkinter.Scrollbar(TG1)
         self.scrollbar.grid(column=3, row=0, sticky='WE')
-        self.text = tkinter.Text(TG1, width=118, height=45, yscrollcommand=self.scrollbar.set)
+        self.text = Tkinter.Text(TG1, width=118, height=45, yscrollcommand=self.scrollbar.set)
         self.text.grid(column=0, row=0, columnspan=3, sticky='E')
         TG1.grid(column=0, row=16, columnspan=4, sticky='WE')
 
@@ -207,8 +207,8 @@ class Main(tkinter.Tk):
     #########################################################
     def fakeRun(self):
         for i in range(1, 100):
-            self.text.insert(tkinter.INSERT, "Test running %d...\n" % i)
-        self.text.insert(tkinter.INSERT, "Test running...\n")
+            self.text.insert(Tkinter.INSERT, "Test running %d...\n" % i)
+        self.text.insert(Tkinter.INSERT, "Test running...\n")
 
     def SpoTyping(self):
         self.text.configure(state="normal")
@@ -241,13 +241,13 @@ class Main(tkinter.Tk):
             blastDB = tmpfile
 
         # Blast
-        self.text.insert(tkinter.INSERT, "Building blast database...\n")
+        self.text.insert(Tkinter.INSERT, "Building blast database...\n")
         proc = subprocess.Popen(["%s/makeblastdb" % self.blast, "-in", blastDB, "-out", blastDB, "-dbtype", "nucl"],
                                 stdout=subprocess.PIPE)
         proc_info = proc.stdout.read()
-        self.text.insert(tkinter.INSERT, "%s\n" % proc_info)
+        self.text.insert(Tkinter.INSERT, "%s\n" % proc_info)
 
-        self.text.insert(tkinter.INSERT, "Running blast...\n")
+        self.text.insert(Tkinter.INSERT, "Running blast...\n")
         tmpH = open("%s.blast.out" % tmpfile, 'w')
         subprocess.call(
             ["%s/blastn" % self.blast, "-query", "%s.reference" % tmpfile, "-db", blastDB, "-task", "blastn", "-dust",
@@ -255,7 +255,7 @@ class Main(tkinter.Tk):
         tmpH.close()
 
         # Parse blast output
-        self.text.insert(tkinter.INSERT, "Parsing blast output...\n")
+        self.text.insert(Tkinter.INSERT, "Parsing blast output...\n")
 
         logname = self.output + '.log'
         log = open(logname, 'a')
@@ -272,26 +272,26 @@ class Main(tkinter.Tk):
         out_file.close()
         log.close()
 
-        self.text.insert(tkinter.INSERT, "\n\nThe predicted binary string is %s\n" % binCode)
-        self.text.insert(tkinter.INSERT, "The predicted spoligotype is %s\n" % SpoType)
-        self.text.insert(tkinter.INSERT, "Output has been saved to %s\n" % self.output)
-        self.text.insert(tkinter.INSERT, "Logfile has been saved to %s\n\n\n" % logname)
+        self.text.insert(Tkinter.INSERT, "\n\nThe predicted binary string is %s\n" % binCode)
+        self.text.insert(Tkinter.INSERT, "The predicted spoligotype is %s\n" % SpoType)
+        self.text.insert(Tkinter.INSERT, "Output has been saved to %s\n" % self.output)
+        self.text.insert(Tkinter.INSERT, "Logfile has been saved to %s\n\n\n" % logname)
 
         # Query the database
         if not os.path.isfile("%s/SITVIT_ONLINE.%s.xls" % (self.outdir, SpoType)):
-            self.text.insert(tkinter.INSERT, "Searching the SITVIT database...\n")
+            self.text.insert(Tkinter.INSERT, "Searching the SITVIT database...\n")
             query_handle = open("%s/SITVIT_ONLINE.%s.xls" % (self.outdir, SpoType), "wb")
             self.query(SpoType, query_handle)
             query_handle.close()
-            self.text.insert(tkinter.INSERT,
+            self.text.insert(Tkinter.INSERT,
                              "The database query result has been saved to %s/SITVIT_ONLINE.%s.xls\n\n\n" % (
                                  self.outdir, SpoType))
         else:
-            self.text.insert(tkinter.INSERT, "%s/SITVIT_ONLINE.%s.xls already exists, will not query again...\n\n\n" % (
+            self.text.insert(Tkinter.INSERT, "%s/SITVIT_ONLINE.%s.xls already exists, will not query again...\n\n\n" % (
                 self.outdir, SpoType))
 
         # Clean up
-        self.text.insert(tkinter.INSERT, "Cleaning up...\n")
+        self.text.insert(Tkinter.INSERT, "Cleaning up...\n")
         post = ['', '.blast.out', '.reference']
         for i in post:
             if os.path.isfile("%s%s" % (tmpfile, i)):
@@ -302,7 +302,7 @@ class Main(tkinter.Tk):
             if os.path.isfile("%s%s" % (blastDB, i)):
                 os.remove("%s%s" % (blastDB, i))
 
-        self.text.insert(tkinter.INSERT, "Done! Finished in %f seconds\n" % (time.clock() - startTime))
+        self.text.insert(Tkinter.INSERT, "Done! Finished in %f seconds\n" % (time.clock() - startTime))
 
         # Disable text box edit
         self.text.configure(state="disabled")
@@ -315,42 +315,42 @@ class Main(tkinter.Tk):
     def preCheck(self):
         ## Input type check and print
         if self.seq and len(self.input1) > 0 and len(self.input2) > 0:
-            self.text.insert(tkinter.INSERT, "ERROR: Only one input is allowed for genomic sequence (fasta)! Quit...\n")
+            self.text.insert(Tkinter.INSERT, "ERROR: Only one input is allowed for genomic sequence (fasta)! Quit...\n")
             return False
         else:
             if not self.seq:
-                self.text.insert(tkinter.INSERT, "Input files are sequencing reads (fastq)\n")
+                self.text.insert(Tkinter.INSERT, "Input files are sequencing reads (fastq)\n")
             else:
-                self.text.insert(tkinter.INSERT, "Input file contains genomic sequences (fasta)\n")
+                self.text.insert(Tkinter.INSERT, "Input file contains genomic sequences (fasta)\n")
 
         ## Input file check and print
         if len(self.input1) == 0:
-            self.text.insert(tkinter.INSERT, "ERROR: Input Fastq 1 or FASTA is required! Quit...\n")
+            self.text.insert(Tkinter.INSERT, "ERROR: Input Fastq 1 or FASTA is required! Quit...\n")
             return False
         else:
-            self.text.insert(tkinter.INSERT, "Input Fastq 1/Fasta: %s\n" % self.input1)
+            self.text.insert(Tkinter.INSERT, "Input Fastq 1/Fasta: %s\n" % self.input1)
 
         if len(self.input2) == 0:
-            self.text.insert(tkinter.INSERT, "Input Fastq 2: not applicable\n")
+            self.text.insert(Tkinter.INSERT, "Input Fastq 2: not applicable\n")
         else:
-            self.text.insert(tkinter.INSERT, "Input Fastq 2: %s\n" % self.input2)
+            self.text.insert(Tkinter.INSERT, "Input Fastq 2: %s\n" % self.input2)
 
         ## Input blast directory check
         if len(self.blast) == 0:
-            self.text.insert(tkinter.INSERT, "ERROR: Blast executables directory is required! Quit...\n")
+            self.text.insert(Tkinter.INSERT, "ERROR: Blast executables directory is required! Quit...\n")
             return False
         else:
-            self.text.insert(tkinter.INSERT, "Blast executables directory: %s\n" % self.blast)
+            self.text.insert(Tkinter.INSERT, "Blast executables directory: %s\n" % self.blast)
 
         ## Input output file check and print
         if len(self.output) == 0:
-            self.text.insert(tkinter.INSERT, "ERROR: Output file is required! Quit...\n")
+            self.text.insert(Tkinter.INSERT, "ERROR: Output file is required! Quit...\n")
             return False
         else:
-            self.text.insert(tkinter.INSERT, "Output file: %s\n" % self.output)
+            self.text.insert(Tkinter.INSERT, "Output file: %s\n" % self.output)
 
         ## Input parameters print
-        self.text.insert(tkinter.INSERT, "Swift mode: %s\n" % str(self.swift))
+        self.text.insert(Tkinter.INSERT, "Swift mode: %s\n" % str(self.swift))
 
         self.min = int(float(self.min))
         self.min_relax = int(float(self.min_relax))
@@ -358,8 +358,8 @@ class Main(tkinter.Tk):
             self.min = 0
         if self.min_relax < 0:
             self.min_relax = 0
-        self.text.insert(tkinter.INSERT, "Error-free hit threshold: %d\n" % self.min)
-        self.text.insert(tkinter.INSERT, "1-error tolerant hit threshold: %d\n" % self.min_relax)
+        self.text.insert(Tkinter.INSERT, "Error-free hit threshold: %d\n" % self.min)
+        self.text.insert(Tkinter.INSERT, "1-error tolerant hit threshold: %d\n" % self.min_relax)
 
         return True
 
@@ -478,9 +478,9 @@ class Main(tkinter.Tk):
 
     ## Web query module
     def post(self, url, data):
-        req = urllib.request.Request(url)
-        data = urllib.parse.urlencode(data)
-        opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor())
+        req = urllib2.Request(url)
+        data = urllib.urlencode(data)
+        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor())
         response = opener.open(req, data, timeout=500)
         return response.read()
 
@@ -568,42 +568,42 @@ class Main(tkinter.Tk):
         self.seq = self.type.get()
 
     def cancel1(self):
-        self.E1.delete(0, tkinter.END)
+        self.E1.delete(0, Tkinter.END)
         self.var1.set("")
         self.input1 = ""
 
     def cancel2(self):
-        self.E2.delete(0, tkinter.END)
+        self.E2.delete(0, Tkinter.END)
         self.var2.set("")
         self.input2 = ""
 
     def cancel3(self):
-        self.E3.delete(0, tkinter.END)
+        self.E3.delete(0, Tkinter.END)
         self.var3.set("")
         self.blast = ""
 
     def cancel4(self):
-        self.E4.delete(0, tkinter.END)
+        self.E4.delete(0, Tkinter.END)
         self.var4.set("")
         self.output = ""
 
     def loadFile1(self):
-        filename = tkinter.filedialog.askopenfilename()
+        filename = tkFileDialog.askopenfilename()
         self.var1.set(filename)
         self.input1 = filename
 
     def loadFile2(self):
-        filename = tkinter.filedialog.askopenfilename()
+        filename = tkFileDialog.askopenfilename()
         self.var2.set(filename)
         self.input2 = filename
 
     def loadDir(self):
-        dirname = tkinter.filedialog.askdirectory()
+        dirname = tkFileDialog.askdirectory()
         self.var3.set(dirname)
         self.blast = dirname
 
     def loadFile3(self):
-        filename = tkinter.filedialog.asksaveasfilename()
+        filename = tkFileDialog.asksaveasfilename()
         self.var4.set(filename)
         self.output = filename
         self.outdir = os.path.dirname(self.output)
@@ -630,16 +630,16 @@ class Main(tkinter.Tk):
         self.var5.set(True)
         self.swift = True
 
-        self.entry6.delete(0, tkinter.END)
+        self.entry6.delete(0, Tkinter.END)
         self.entry6.insert(0, 5)
         self.min = 5
 
-        self.entry7.delete(0, tkinter.END)
+        self.entry7.delete(0, Tkinter.END)
         self.entry7.insert(0, 6)
         self.min_relax = 6
 
         self.text.configure(state="normal")
-        self.text.delete(1.0, tkinter.END)
+        self.text.delete(1.0, Tkinter.END)
         self.text.configure(state="disabled")
 
     def quit(self):
